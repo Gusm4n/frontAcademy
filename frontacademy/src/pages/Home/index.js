@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
 import { 
     Flex,
     Box, 
@@ -8,10 +9,22 @@ import {
     Divider} from "@chakra-ui/react"
 import Logo from '../../assets/Logo.svg'
 import background from '../../assets/background.svg'
-import { AddIcon } from '@chakra-ui/icons'
+import { AddIcon, InfoIcon } from '@chakra-ui/icons'
+import api from '../../services/api'
+import CardItems from '../../components/CardItems.js/CardItems'
 
 
 export const Home = () => {
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(()=>{
+        const dados = api.get('/items').then((response)=> {
+             setCategories(response.data)
+        })
+    }, [])
+
+
     return(
         <>
         {/* Header */}
@@ -91,9 +104,26 @@ export const Home = () => {
         </Flex>
 
         {/* Lista de itens */}
-        <Flex>
-            <Text> <Button></Button></Text>
-        </Flex>
+
+
+        {categories.map((category)=> {
+            return(
+        <Flex key={category._id}
+        marginTop='56px'
+        flexDir='column'>
+            <Text
+            fontSize='36px'
+            marginBottom='32px'
+            >{category.category}</Text>
+            <Flex
+            justifyContent='space-between'
+            flexWrap='wrap'>
+            <CardItems />
+            </Flex>
+        </Flex>)
+        })}
+        
+
 
         {/* Footer */}
         <Box>
